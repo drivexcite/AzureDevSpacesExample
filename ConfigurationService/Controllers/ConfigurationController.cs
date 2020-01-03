@@ -7,7 +7,7 @@ namespace AzureDevSpacesExample.Controllers
     public class WeatherForecastController : ControllerBase
     {
         [HttpGet]
-        [Route("configuration/{memberId}")]
+        [Route("settings/{memberId}")]
         public IActionResult GetOptOutSettings(string memberId)
         {
             return Ok(new

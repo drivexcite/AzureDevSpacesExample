@@ -22,9 +22,13 @@ ENV NVM_DIR=/home/vscode/.nvm
 # [Optional] Install the Azure CLI
 ARG INSTALL_AZURE_CLI="true"
 ARG INSTALL_DOCKER_CLI="true"
+ARG INSTALL_KUBERNETES_CLI="true"
+ARG INSTALL_AZURE_DEV_SPACES="true"
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
+
+COPY azds-linux-setup.sh /
 
 # Configure apt and install packages
 RUN apt-get update \
@@ -43,28 +47,28 @@ RUN apt-get update \
     #
     # [Optional] Install Node.js for ASP.NET Core Web Applicationss
     && if [ "$INSTALL_NODE" = "true" ]; then \
-        #
-        # Install nvm and Node
-        mkdir ${NVM_DIR} \
-        && curl -so- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash 2>&1 \
-        && chown -R vscode:vscode ${NVM_DIR} \
-        && /bin/bash -c "source $NVM_DIR/nvm.sh \
-            && nvm install ${NODE_VERSION} \
-            && nvm alias default ${NODE_VERSION}" 2>&1 \
-        && INIT_STRING='[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"  && [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"' \
-        && echo $INIT_STRING >> /home/vscode/.bashrc \
-        && echo $INIT_STRING >> /home/vscode/.zshrc \
-        && echo $INIT_STRING >> /root/.zshrc \
-        #
-        # Install yarn
-        && curl -sS https://dl.yarnpkg.com/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/pubkey.gpg | apt-key add - 2>/dev/null \
-        && echo "deb https://dl.yarnpkg.com/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-        && apt-get update \
-        && apt-get -y install --no-install-recommends yarn; \
+    #
+    # Install nvm and Node
+    mkdir ${NVM_DIR} \
+    && curl -so- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash 2>&1 \
+    && chown -R vscode:vscode ${NVM_DIR} \
+    && /bin/bash -c "source $NVM_DIR/nvm.sh \
+    && nvm install ${NODE_VERSION} \
+    && nvm alias default ${NODE_VERSION}" 2>&1 \
+    && INIT_STRING='[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"  && [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"' \
+    && echo $INIT_STRING >> /home/vscode/.bashrc \
+    && echo $INIT_STRING >> /home/vscode/.zshrc \
+    && echo $INIT_STRING >> /root/.zshrc \
+    #
+    # Install yarn
+    && curl -sS https://dl.yarnpkg.com/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/pubkey.gpg | apt-key add - 2>/dev/null \
+    && echo "deb https://dl.yarnpkg.com/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends yarn; \
     fi \
     #
     # [Optional] Install the Azure CLI
-    && if [ "$INSTALL_AZURE_CLI" = "true" ]; then \
+        && if [ "$INSTALL_AZURE_CLI" = "true" ]; then \
         echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list \
         && curl -sL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 2>/dev/null \
         && apt-get update \
@@ -80,6 +84,22 @@ RUN apt-get update \
         && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]') $(lsb_release -cs) stable" \
         && apt-get update \
         && apt-get install -y docker-ce-cli; \
+    fi \
+    #
+    # Install Kubernetes CLI
+    # https://kubernetes.io/docs/tasks/tools/install-kubectl/
+    && if [ "$INSTALL_KUBERNETES_CLI" = "true" ]; then \
+        apt-get update && sudo apt-get install -y apt-transport-https \
+        && curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - \
+        && echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list \
+        && apt-get update \
+        && apt-get install -y kubectl; \
+    fi \
+    #
+    # Install Azure Dev Spaces
+    # https://docs.microsoft.com/en-us/azure/dev-spaces/how-to/install-dev-spaces
+    && if [ "$INSTALL_AZURE_DEV_SPACES" = "true" ]; then \
+        chmod +x /azds-linux-setup.sh && /azds-linux-setup.sh; \
     fi \
     #
     # Clean up

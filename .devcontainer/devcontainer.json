@@ -6,7 +6,9 @@
 	// Use 'settings' to set *default* container specific settings.json values on container create. 
 	// You can edit these settings after create using File > Preferences > Settings > Remote.
 	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash"
+		// "terminal.integrated.shell.linux": "/bin/bash"
+		// Make powershell the default linux shell instead of Bash.
+		"terminal.integrated.shell.linux": "/usr/bin/pwsh"
 	},
 	// Uncomment the next line to run commands after the container is created.
 	// "postCreateCommand": "dotnet restore",
@@ -26,7 +28,13 @@
 	// and open / rebuild the container so the settings take effect.
 	//
 	"mounts": [
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		// Docker doesn't seem to support absolute paths with : and \ in Windows.
+		// "source=${localWorkspaceFolder}/mounts/ssh,target=/root/.ssh,type=bind,consistency=cached",
+		// To persist SSH credentials to connect to the Kubernetes Cluster.
+		"source=/D/Code/AzureDevSpacesExample/mounts/ssh,target=/root/.ssh,type=bind,consistency=cached",
+		// To persist the credentials and configuration of Kubectl.
+		"source=/D/Code/AzureDevSpacesExample/mounts/kube,target=/root/.kube,type=bind,consistency=cached"
 	],
 	"remoteEnv": {
 		// [Optional] Override the default HTTP endpoints - need to listen to '*' for appPort to work
@@ -41,6 +49,11 @@
 	// "remoteUser": "vscode",
 	// Add the IDs of extensions you want installed when the container is created in the array below.
 	"extensions": [
-		"ms-vscode.csharp"
+		"ms-vscode.csharp",
+		"ms-azuretools.vscode-docker",
+		"ms-vscode.powershell",
+		"ms-vscode.azurecli",
+		"ms-kubernetes-tools.vscode-kubernetes-tools",
+		"azuredevspaces.azds"
 	]
 }

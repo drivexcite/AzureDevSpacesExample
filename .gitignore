@@ -1,0 +1,7 @@
+/mounts/kube/config
+/mounts/kube/cache
+/mounts/kube/http-cache
+/mounts/ssh/id_rsa
+/mounts/ssh/id_rsa.pub
+/ConfigurationService/bin
+/ConfigurationService/obj
