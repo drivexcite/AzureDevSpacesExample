@@ -3,8 +3,8 @@
 # Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
 #-------------------------------------------------------------------------------------------------------------
 
-ARG DOTNETCORE_VESRION=3.1
-FROM mcr.microsoft.com/dotnet/core/sdk:${DOTNETCORE_VESRION}
+ARG DOTNETCORE_VERSION=2.2
+FROM mcr.microsoft.com/dotnet/core/sdk:${DOTNETCORE_VERSION}
 
 # This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
 # property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
@@ -21,14 +21,13 @@ ENV NVM_DIR=/home/vscode/.nvm
 
 # [Optional] Install the Azure CLI
 ARG INSTALL_AZURE_CLI="true"
+ARG INSTALL_POWERSHELL_CORE="true"
 ARG INSTALL_DOCKER_CLI="true"
 ARG INSTALL_KUBERNETES_CLI="true"
 ARG INSTALL_AZURE_DEV_SPACES="true"
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
-
-COPY azds-linux-setup.sh /
 
 # Configure apt and install packages
 RUN apt-get update \
@@ -68,11 +67,19 @@ RUN apt-get update \
     fi \
     #
     # [Optional] Install the Azure CLI
-        && if [ "$INSTALL_AZURE_CLI" = "true" ]; then \
+    && if [ "$INSTALL_AZURE_CLI" = "true" ]; then \
         echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list \
         && curl -sL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 2>/dev/null \
         && apt-get update \
         && apt-get install -y azure-cli; \
+    fi \
+    #
+    # Install PowerShell Core
+    && if [ "$INSTALL_POWERSHELL_CORE" = "true" ]; then \
+        curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - \
+        && sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" > /etc/apt/sources.list.d/microsoft.list' \
+        && apt-get update \
+        && apt-get install -y powershell; \
     fi \
     #
     # Install Docker CE CLI
@@ -99,7 +106,9 @@ RUN apt-get update \
     # Install Azure Dev Spaces
     # https://docs.microsoft.com/en-us/azure/dev-spaces/how-to/install-dev-spaces
     && if [ "$INSTALL_AZURE_DEV_SPACES" = "true" ]; then \
-        chmod +x /azds-linux-setup.sh && /azds-linux-setup.sh; \
+        wget https://aka.ms/get-azds-linux \
+        && mv ./get-azds-linux ./azds-linux-setup.sh \
+        && chmod +x /azds-linux-setup.sh && /azds-linux-setup.sh; \
     fi \
     #
     # Clean up

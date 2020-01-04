@@ -1,0 +1,1 @@
+Don't delete this directory. It is required for the VS Dev Container to store SSH credentials for AKS.
