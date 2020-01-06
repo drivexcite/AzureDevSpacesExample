@@ -5,3 +5,7 @@
 /mounts/ssh/id_rsa.pub
 /ConfigurationService/bin
 /ConfigurationService/obj
+/FulfillmentService/obj
+/FulfillmentService/bin
+/ConsumerService/obj
+/ConsumerService/bin

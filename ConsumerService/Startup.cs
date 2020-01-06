@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using ConsumerService.Controllers;
+﻿using ConsumerService.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +22,7 @@ namespace ConsumerService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpClient();
 
-            const string configurationServiceUrl = "http://configuration";
-            services.AddTransient<ConsumersController>(injector => new ConsumersController((HttpClient)injector.GetService(typeof(HttpClient)), configurationServiceUrl));
+            services.AddSingleton(new ConsumersControllerConfiguration { ConfigurationServiceUrl = "http://configuration" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,7 +38,6 @@ namespace ConsumerService
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

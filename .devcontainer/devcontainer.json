@@ -16,7 +16,11 @@
 	// your server accepts connections from all interfaces (0.0.0.0 or '*'), not just localhost.
 	"appPort": [
 		5000,
-		5001
+		5001,
+		5002,
+		5003,
+		5004,
+		5005
 	],
 	// [Optional] To reuse of your local HTTPS dev cert, first export it locally using this command: 
 	//  * Windows PowerShell:
@@ -38,8 +42,8 @@
 	],
 	"remoteEnv": {
 		// [Optional] Override the default HTTP endpoints - need to listen to '*' for appPort to work
-		"ASPNETCORE_Kestrel__Endpoints__Http__Url": "http://*:5000",
-		"ASPNETCORE_Kestrel__Endpoints__Https__Url": "https://*:5001"
+		//"ASPNETCORE_Kestrel__Endpoints__Http__Url": "http://*:5000;http://*:5001;;http://*:5002;http://*:5003"
+		// "ASPNETCORE_Kestrel__Endpoints__Https__Url": "https://*:5001"
 		// "ASPNETCORE_Kestrel__Certificates__Default__Password": "SecurePwdGoesHere",
 		// "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/aspnetapp.pfx",
 	},
