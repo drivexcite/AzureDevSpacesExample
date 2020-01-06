@@ -1,18 +1,18 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AzureDevSpacesExample.Controllers
+namespace ConfigurationService.Controllers
 {
     [ApiController]
-    public class WeatherForecastController : ControllerBase
+    public class SettingsController : ControllerBase
     {
         [HttpGet]
-        [Route("settings/{memberId}")]
-        public IActionResult GetOptOutSettings(string memberId)
+        [Route("settings/{consumerId}")]
+        public IActionResult GetSettings(string consumerId)
         {
             return Ok(new
             {
-                memberId,
+                consumerId,
                 optOut = DateTime.Now.Second % 2 == 0
             });
         }
