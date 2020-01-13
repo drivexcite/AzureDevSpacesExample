@@ -22,7 +22,7 @@ namespace FulfillmentService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpClient();
 
-            services.AddSingleton(new FulfillmentControllerConfiguration { ConsumerServiceUrl = "http://consumer" });
+            services.AddSingleton(new FulfillmentControllerConfiguration { ConsumerServiceUrl = Configuration["ConsumerServiceUrl"] ?? "http://consumer" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

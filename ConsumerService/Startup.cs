@@ -22,7 +22,7 @@ namespace ConsumerService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpClient();
 
-            services.AddSingleton(new ConsumersControllerConfiguration { ConfigurationServiceUrl = "http://configuration" });
+            services.AddSingleton(new ConsumersControllerConfiguration { ConfigurationServiceUrl = Configuration["ConfigurationServiceUrl"] ?? "http://configuration" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

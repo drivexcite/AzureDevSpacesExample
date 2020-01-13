@@ -18,9 +18,7 @@
 		5000,
 		5001,
 		5002,
-		5003,
-		5004,
-		5005
+		5003
 	],
 	// [Optional] To reuse of your local HTTPS dev cert, first export it locally using this command: 
 	//  * Windows PowerShell:
@@ -46,6 +44,9 @@
 		// "ASPNETCORE_Kestrel__Endpoints__Https__Url": "https://*:5001"
 		// "ASPNETCORE_Kestrel__Certificates__Default__Password": "SecurePwdGoesHere",
 		// "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/aspnetapp.pfx",
+		"ConfigurationServiceUrl": "http://localhost:5001",
+		"ConsumerServiceUrl": "http://localhost:5002",
+		"FulfillmentServiceUrl": "http://localhost:5003"
 	},
 	// Uncomment the next line to have VS Code connect as an existing non-root user in the container. 
 	// On Linux, by default, the container user's UID/GID will be updated to match your local user. See
